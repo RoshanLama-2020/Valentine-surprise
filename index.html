@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Surprise</title>
+<audio id="loveMusic" src="love-song.mp3" loop></audio>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #ffdde1;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    position: relative;
+  }
+
+  h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #e60073;
+    text-align: center;
+    z-index: 3;
+    margin: 0 0 20px 0; /* space below text */
+  }
+
+  .buttons {
+    margin-top: 30px;
+    z-index: 2;
+  }
+
+  button {
+    font-size: 1.5rem;
+    padding: 15px 30px;
+    margin: 0 20px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+  }
+
+  button#yes {
+    background-color: #ff4d94;
+    color: white;
+  }
+
+  button#no {
+    background-color: #cccccc;
+    color: black;
+  }
+
+  .heart {
+    position: absolute;
+    font-size: 2rem;
+    color: #ff1a75;
+    animation: float 5s linear infinite;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  @keyframes float {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+  .celebration-photo {
+    width: 300px;
+    height: auto;
+    border-radius: 20px; /* optional, makes it prettier */
+    margin-top: 20px; /* space between text and photo */
+    z-index: 2;
+  }
+
+  .love-graffiti {
+    position: absolute;
+    color: #ff1a75;
+    font-weight: bold;
+    pointer-events: none;
+    user-select: none;
+    animation: rise 4s linear forwards;
+    z-index: 4; /* above everything */
+  }
+
+  @keyframes rise {
+    0% { transform: translateY(100vh); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translateY(-50px); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<h1>DIKSHYA, WILL YOU BE MY VALENTINE?</h1>
+
+<div class="buttons">
+  <button id="yes">YES</button>
+  <button id="no">NO</button>
+</div>
+<audio id="loveMusic" src="assets/love-song.mp3" autoplay loop></audio>
+
+<script>
+  // Floating hearts
+  const colors = ['#ff4d94','#ff66b3','#ff1a75','#ff99cc'];
+  function createHeart() {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.animationDuration = (3 + Math.random() * 5) + 's';
+    heart.style.fontSize = (20 + Math.random() * 30) + 'px';
+    heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+    heart.textContent = '❤️';
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 8000);
+  }
+  setInterval(createHeart, 300);
+
+  const noBtn = document.getElementById('no');
+  const yesBtn = document.getElementById('yes');
+  const music = document.getElementById("loveMusic");
+  let yesScale = 1;
+
+  // NO button dodge & YES button grows
+  noBtn.addEventListener('mouseenter', () => {
+    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    noBtn.style.position = 'absolute';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+
+    yesScale += 0.2;
+    yesBtn.style.transform = `scale(${yesScale})`;
+  });
+
+  // YES click
+  yesBtn.addEventListener('click', () => {
+    const music = document.getElementById('loveMusic');
+    
+    // Start music with volume 0
+    music.play();
+
+    // Smooth fade-in effect
+    let volume = 0;
+    const fadeIn = setInterval(() => {
+        if (volume < 1) {
+            volume += 0.02;
+            music.volume = volume;
+        } else {
+            clearInterval(fadeIn);
+        }
+    }, 100); // smooth increase
+    
+    // Remove original text and buttons
+    document.querySelector('h1').remove();
+    document.querySelector('.buttons').remove();
+
+    // Add new text
+    const text = document.createElement('h1');
+    text.innerHTML = 'Forever Yours My Love❤️ I Love You Too'; // You can change this to any short personal message
+    text.style.position = 'relative';
+    text.style.zIndex = '3';
+    text.style.textAlign = 'center';
+    text.style.fontSize = '3rem';
+    text.style.color = '#e60073';
+    document.body.appendChild(text);
+
+    // Add photo below the text
+    const photo = document.createElement('img');
+    photo.src = 'assets/your-photo.png'; // Replace this with your photo URL
+    photo.className = 'celebration-photo';
+    document.body.appendChild(photo);
+
+    // Add rising love graffiti from bottom
+    for(let i=0;i<30;i++){
+      const graffiti = document.createElement('div');
+      graffiti.className = 'love-graffiti';
+      graffiti.textContent = '❤️ LOVE ❤️';
+      graffiti.style.left = Math.random() * window.innerWidth + 'px';
+      graffiti.style.fontSize = (20 + Math.random()*30) + 'px';
+      graffiti.style.animationDuration = (3 + Math.random()*3) + 's';
+      graffiti.style.color = colors[Math.floor(Math.random() * colors.length)];
+      document.body.appendChild(graffiti);
+    }
+  });
+</script>
+
+</body>
+</html>
